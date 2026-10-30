@@ -16,13 +16,6 @@ import type { ApiResponse } from '@/types';
 interface HRStatus { configured: boolean; apiUrl: string | null; lastSync: string | null; status: 'CONNECTED' | 'DISCONNECTED' | 'ERROR' }
 interface SyncLog { id: string; status: 'SUCCESS' | 'ERROR'; recordsSynced: number; errorMessage: string | null; createdAt: string }
 
-const TOOLS = [
-  { name: 'BambooHR',    desc: 'HR management for small and medium businesses', color: '#75BC22', initial: 'B' },
-  { name: 'Workday',     desc: 'Enterprise cloud-based financial management',   color: '#F05B1E', initial: 'W' },
-  { name: 'ADP',         desc: 'Payroll, HR, talent and benefits solutions',    color: '#D0021B', initial: 'A' },
-  { name: 'Custom API',  desc: 'Connect any HR system via REST API',           color: '#6366F1', initial: 'C' },
-];
-
 export function HRIntegrationPage() {
   const [apiUrl, setApiUrl] = useState('');
   const [apiKey, setApiKey] = useState('');
@@ -54,7 +47,7 @@ export function HRIntegrationPage() {
     mutationFn: () => api.post('/hr/configure', { apiUrl, apiKey }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['hr'] });
-      toast({ title: '✅ HR integration configured!' });
+      toast({ title: 'HR integration configured!' });
     },
     onError: () => toast({ variant: 'destructive', title: 'Configuration failed' }),
   });
@@ -63,7 +56,7 @@ export function HRIntegrationPage() {
     mutationFn: () => api.post('/hr/sync'),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['hr'] });
-      toast({ title: '✅ Sync completed successfully!' });
+      toast({ title: 'Sync completed successfully!' });
     },
     onError: () => toast({ variant: 'destructive', title: 'Sync failed' }),
   });
@@ -75,7 +68,7 @@ export function HRIntegrationPage() {
       {/* Header */}
       <div className="flex items-center justify-between animate-fade-up">
         <div>
-          <h1 className="font-heading font-bold text-2xl text-white">HR Integration</h1>
+          <h1 className="print-head text-[44px]">HR Integration</h1>
           <p className="text-sm text-white/35 mt-1">Connect your HR system to sync employee data</p>
         </div>
         <div className={cn(
@@ -105,42 +98,6 @@ export function HRIntegrationPage() {
 
         {/* Connect tab */}
         <TabsContent value="connect" className="mt-5 space-y-5">
-          {/* Tool cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 stagger">
-            {TOOLS.map((tool, i) => (
-              <div key={tool.name}
-                className={cn(
-                  'glass rounded-2xl p-4 space-y-3 card-hover cursor-pointer animate-fade-in border transition-all',
-                  i === 3
-                    ? 'border-indigo/25 bg-indigo/[0.04]'
-                    : 'border-white/[0.06] hover:border-white/[0.12]',
-                )}
-                style={{ animationDelay: `${i * 60}ms` }}>
-                <div className="flex items-center justify-between">
-                  <div className="h-10 w-10 rounded-xl flex items-center justify-center text-lg font-heading font-bold text-white"
-                    style={{ background: `${tool.color}25`, border: `1px solid ${tool.color}30` }}>
-                    {tool.initial}
-                  </div>
-                  {i === 3 && (
-                    <span className="text-[10px] font-bold text-indigo bg-indigo/15 border border-indigo/25 rounded-full px-2 py-0.5">Active</span>
-                  )}
-                </div>
-                <div>
-                  <p className="font-semibold text-sm text-white/85">{tool.name}</p>
-                  <p className="text-xs text-white/35 mt-0.5 leading-relaxed">{tool.desc}</p>
-                </div>
-                <Button size="sm"
-                  className={cn(
-                    'w-full rounded-lg h-8 text-xs',
-                    i === 3
-                      ? 'bg-gradient-primary text-white shimmer shadow-glow-sm'
-                      : 'bg-white/[0.05] text-white/50 border border-white/[0.08] hover:bg-white/[0.08]',
-                  )}>
-                  {i === 3 ? 'Configure' : 'Connect'}
-                </Button>
-              </div>
-            ))}
-          </div>
 
           {/* API Config form */}
           <div className="glass rounded-2xl p-5 space-y-4 animate-fade-up" style={{ animationDelay: '300ms' }}>
@@ -229,18 +186,18 @@ export function HRIntegrationPage() {
             <div className="overflow-x-auto"><div className="min-w-[360px] grid grid-cols-[1fr_40px_1fr] gap-3 items-center">
               <div className="text-[10px] font-bold uppercase tracking-widest text-white/25 px-1">HR System Field</div>
               <div />
-              <div className="text-[10px] font-bold uppercase tracking-widest text-white/25 px-1">Taskify Field</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-white/25 px-1">Inked field</div>
               {[
                 ['employee_id', 'id'],
                 ['first_name + last_name', 'fullName'],
                 ['work_email', 'email'],
                 ['department_name', 'department'],
                 ['job_title', 'designation'],
-              ].map(([hr, taskify], i) => (
+              ].map(([hr, inked], i) => (
                 <>
                   <div key={`hr-${i}`} className="rounded-lg bg-white/[0.04] border border-white/[0.07] px-3 py-2 text-sm font-mono text-white/60">{hr}</div>
                   <div key={`arrow-${i}`} className="text-center text-white/20 font-mono text-sm">→</div>
-                  <div key={`t-${i}`} className="rounded-lg bg-indigo/[0.08] border border-indigo/15 px-3 py-2 text-sm font-mono text-indigo/80">{taskify}</div>
+                  <div key={`t-${i}`} className="rounded-lg bg-indigo/[0.08] border border-indigo/15 px-3 py-2 text-sm font-mono text-indigo/80">{inked}</div>
                 </>
               ))}
             </div></div>

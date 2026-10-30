@@ -2,42 +2,22 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface UIState {
+  /** desktop sidebar: full width or folded to icons (remembered) */
   sidebarOpen: boolean;
-  theme: 'light' | 'dark';
-  setSidebarOpen: (open: boolean) => void;
+  /** phone drawer: closes on every page change */
+  mobileNavOpen: boolean;
   toggleSidebar: () => void;
-  setTheme: (theme: 'light' | 'dark') => void;
-  toggleTheme: () => void;
+  setMobileNavOpen: (open: boolean) => void;
 }
 
 export const useUIStore = create<UIState>()(
   persist(
     (set) => ({
       sidebarOpen: true,
-      theme: 'dark',
-
-      setSidebarOpen: (open) => set({ sidebarOpen: open }),
+      mobileNavOpen: false,
       toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
-      setTheme: (theme) => {
-        document.documentElement.classList.remove('dark', 'light');
-        document.documentElement.classList.add(theme);
-        set({ theme });
-      },
-      toggleTheme: () =>
-        set((s) => {
-          const next = s.theme === 'light' ? 'dark' : 'light';
-          document.documentElement.classList.remove('dark', 'light');
-          document.documentElement.classList.add(next);
-          return { theme: next };
-        }),
+      setMobileNavOpen: (open) => set({ mobileNavOpen: open }),
     }),
-    {
-      name: 'taskify-ui',
-      onRehydrateStorage: () => (state) => {
-        const theme = state?.theme ?? 'dark';
-        document.documentElement.classList.remove('dark', 'light');
-        document.documentElement.classList.add(theme);
-      },
-    },
+    { name: 'inked-ui', partialize: (s) => ({ sidebarOpen: s.sidebarOpen }) },
   ),
 );

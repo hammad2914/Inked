@@ -1,9 +1,6 @@
 {
-    "rewrites": [
-      {
-        "source": "/(.*)",
-        "destination": "/"
-      }
-    ]
-  }
-  
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://taskify-backend-c7zy.onrender.com/api/$1" },
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}

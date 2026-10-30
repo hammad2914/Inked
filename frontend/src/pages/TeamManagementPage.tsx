@@ -63,7 +63,7 @@ export function TeamManagementPage() {
     mutationFn: () => api.post('/users', inviteForm),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      toast({ title: '✅ Invitation sent!', description: `${inviteForm.email} will receive an invite email.` });
+      toast({ title: 'Invitation sent!', description: `${inviteForm.email} will receive an invite email.` });
       setInviteOpen(false);
       setInviteForm({ email: '', fullName: '', department: '', designation: '' });
     },
@@ -78,7 +78,7 @@ export function TeamManagementPage() {
       api.patch(`/users/${id}/status`, { status }),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      toast({ title: variables.status === 'ACTIVE' ? '✅ User activated' : '🚫 User disabled' });
+      toast({ title: variables.status === 'ACTIVE' ? 'User activated' : '🚫 User disabled' });
     },
     onError: (err: unknown) => {
       const e = err as { response?: { data?: { message?: string } } };
@@ -106,7 +106,7 @@ export function TeamManagementPage() {
       {/* Header */}
       <div className="flex items-center justify-between animate-fade-up">
         <div>
-          <h1 className="font-heading font-bold text-2xl text-white">Team</h1>
+          <h1 className="print-head text-[44px]">Team</h1>
           <p className="text-sm text-white/35 mt-1">{total} member{total !== 1 ? 's' : ''} in your workspace</p>
         </div>
         <Button

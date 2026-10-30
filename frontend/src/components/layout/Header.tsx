@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  Bell, Sun, Moon, LogOut, User, Menu, CheckCheck,
+  Bell, LogOut, User, Menu, CheckCheck,
   Search, ChevronRight, Command, FolderKanban, CheckSquare,
   LayoutDashboard, Users, BarChart3, Settings, X,
 } from 'lucide-react';
@@ -51,26 +51,24 @@ function Breadcrumb() {
   const parts = location.pathname.split('/').filter(Boolean);
   if (parts.length === 0) return null;
 
+  // ids become "Project" / "Task"; the bare /tasks segment has no page of its own
   const crumbs: { label: string; href: string }[] = [];
   let path = '';
-  for (const part of parts) {
+  parts.forEach((part, i) => {
     path += `/${part}`;
-    const label = breadcrumbMap[path] ?? (part.length > 20 ? `${part.slice(0, 8)}…` : part);
+    if (part === 'tasks') return;
+    const label = breadcrumbMap[path] ?? (parts[i - 1] === 'projects' ? 'Project' : parts[i - 1] === 'tasks' ? 'Task' : part);
     crumbs.push({ label, href: path });
-  }
+  });
 
   return (
-    <nav className="flex items-center gap-1.5 text-sm">
+    <nav className="flex items-center gap-1.5 font-heading text-[15px] font-semibold uppercase tracking-[.06em]">
       {crumbs.map((crumb, i) => (
         <span key={crumb.href} className="flex items-center gap-1.5">
-          {i > 0 && <ChevronRight className="h-3.5 w-3.5 text-foreground/20" />}
-          <span className={cn(
-            i === crumbs.length - 1
-              ? 'font-semibold text-foreground/80'
-              : 'text-foreground/35 hover:text-foreground/60 cursor-pointer transition-colors',
-          )}>
-            {crumb.label}
-          </span>
+          {i > 0 && <ChevronRight className="h-3.5 w-3.5 text-foreground/30" />}
+          {i === crumbs.length - 1
+            ? <span className="text-foreground">{crumb.label}</span>
+            : <Link to={crumb.href} className="text-muted-foreground transition-colors hover:text-foreground">{crumb.label}</Link>}
         </span>
       ))}
     </nav>
@@ -164,7 +162,7 @@ function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void 
 
 export function Header() {
   const { user, logout } = useAuthStore();
-  const { theme, toggleTheme, setSidebarOpen } = useUIStore();
+  const { setMobileNavOpen } = useUIStore();
   const { unreadCount, setUnreadCount } = useSocketStore();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -212,13 +210,13 @@ export function Header() {
     <>
       <CommandPalette open={cmdOpen} onClose={() => setCmdOpen(false)} />
 
-      <header className="flex h-14 items-center justify-between px-4 md:px-5 border-b border-border backdrop-blur-xl bg-base/80 sticky top-0 z-30 shrink-0">
+      <header className="flex h-14 items-center justify-between px-4 md:px-5 border-b border-border bg-background sticky top-0 z-30 shrink-0">
         {/* Left */}
         <div className="flex items-center gap-3">
           <Button
             variant="ghost" size="icon"
             className="md:hidden h-8 w-8 text-foreground/50 hover:text-foreground hover:bg-tint/[0.06] rounded-lg"
-            onClick={() => setSidebarOpen(true)}
+            onClick={() => setMobileNavOpen(true)}
           >
             <Menu className="h-4 w-4" />
           </Button>
@@ -247,7 +245,7 @@ export function Header() {
                 className="relative h-8 w-8 text-foreground/50 hover:text-foreground hover:bg-tint/[0.06] rounded-lg">
                 <Bell className="h-4 w-4" />
                 {displayCount > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-indigo text-[9px] font-bold text-white animate-pulse-glow">
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-indigo text-[9px] font-bold text-white">
                     {displayCount > 9 ? '9+' : displayCount}
                   </span>
                 )}
@@ -291,13 +289,6 @@ export function Header() {
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {/* Theme toggle */}
-          <Button variant="ghost" size="icon"
-            onClick={toggleTheme}
-            className="h-8 w-8 text-foreground/50 hover:text-foreground hover:bg-tint/[0.06] rounded-lg">
-            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
 
           {/* User menu */}
           {user && (

@@ -9,35 +9,27 @@ import { useUIStore } from '@/stores/uiStore';
 export function AppLayout() {
   useSocket();
   const location = useLocation();
-  const { sidebarOpen, setSidebarOpen } = useUIStore();
+  const { mobileNavOpen, setMobileNavOpen } = useUIStore();
 
-  // Close mobile drawer on route change
   useEffect(() => {
-    setSidebarOpen(false);
-  }, [location.pathname, setSidebarOpen]);
+    setMobileNavOpen(false);
+  }, [location.pathname, setMobileNavOpen]);
 
   return (
     <div className="flex h-screen overflow-hidden bg-base">
-      {/* ── Desktop sidebar (always visible ≥ md) ── */}
-      <div className="hidden md:flex h-full shrink-0">
+      <div className="hidden h-full shrink-0 md:flex">
         <Sidebar />
       </div>
 
-      {/* ── Mobile sidebar overlay ── */}
-      {sidebarOpen && (
+      {mobileNavOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setSidebarOpen(false)}
-          />
-          {/* Drawer */}
+          <div className="absolute inset-0 bg-print/40" onClick={() => setMobileNavOpen(false)} />
           <div className="relative flex h-full w-64 flex-col animate-slide-in-left">
-            <Sidebar />
-            {/* Close button */}
+            <Sidebar expanded />
             <button
-              onClick={() => setSidebarOpen(false)}
-              className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-tint/[0.08] text-foreground/50 hover:text-foreground hover:bg-tint/[0.12] transition-all"
+              onClick={() => setMobileNavOpen(false)}
+              aria-label="Close the menu"
+              className="absolute right-3 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-[3px] text-muted-foreground hover:bg-print/[0.06] hover:text-print"
             >
               <X className="h-4 w-4" />
             </button>
@@ -45,11 +37,10 @@ export function AppLayout() {
         </div>
       )}
 
-      {/* ── Main content ── */}
-      <div className="flex flex-1 flex-col overflow-hidden min-w-0">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <Header />
         <main className="flex-1 overflow-y-auto bg-base">
-          <div key={location.pathname} className="page-enter h-full">
+          <div key={location.pathname} className="page-enter">
             <Outlet />
           </div>
         </main>

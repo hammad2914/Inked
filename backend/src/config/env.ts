@@ -10,8 +10,8 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   FRONTEND_URL: z.string().default('http://localhost:5173'),
   BREVO_API_KEY: z.string().default(''),
-  BREVO_FROM_EMAIL: z.string().default('noreply@taskify.com'),
-  BREVO_FROM_NAME: z.string().default('Taskify'),
+  BREVO_FROM_EMAIL: z.string().default('noreply@example.com'),
+  BREVO_FROM_NAME: z.string().default('Inked'),
   GEMINI_API_KEY: z.string().optional(),
   GEMINI_MODEL: z.string().default('gemini-2.0-flash-lite'),
 });

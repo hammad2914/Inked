@@ -1,7 +1,7 @@
 {
-  "name": "taskify-frontend",
+  "name": "inked-web",
   "version": "1.0.0",
-  "description": "Taskify SaaS Project Management - Frontend",
+  "description": "Inked: project planner web app",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

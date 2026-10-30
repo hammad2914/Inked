@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { prisma } from '../../config/database';
 import { generateAccessToken, generateRefreshToken } from '../../utils/jwt';
 
-const DEMO_ADMIN_EMAIL = 'demo@taskify.app';
+const DEMO_ADMIN_EMAIL = 'demo@inked.example';
 const DEMO_ADMIN_PASSWORD = 'Demo@123456';
 const DEMO_COMPANY_NAME = 'Demo Company';
 
@@ -80,10 +80,10 @@ export async function resetDemo(): Promise<{ email: string; password: string }> 
   });
 
   const [alice, bob, carol, david] = await Promise.all([
-    prisma.user.create({ data: { companyId: company.id, fullName: 'Alice Chen', email: 'alice@demo.taskify.app', passwordHash: memberHash, role: 'MEMBER', status: 'ACTIVE', department: 'Engineering', designation: 'Senior Engineer' } }),
-    prisma.user.create({ data: { companyId: company.id, fullName: 'Bob Martinez', email: 'bob@demo.taskify.app', passwordHash: memberHash, role: 'MEMBER', status: 'ACTIVE', department: 'Design', designation: 'UI/UX Designer' } }),
-    prisma.user.create({ data: { companyId: company.id, fullName: 'Carol Smith', email: 'carol@demo.taskify.app', passwordHash: memberHash, role: 'MEMBER', status: 'ACTIVE', department: 'Engineering', designation: 'Backend Engineer' } }),
-    prisma.user.create({ data: { companyId: company.id, fullName: 'David Kim', email: 'david@demo.taskify.app', passwordHash: memberHash, role: 'MEMBER', status: 'ACTIVE', department: 'QA', designation: 'QA Engineer' } }),
+    prisma.user.create({ data: { companyId: company.id, fullName: 'Alice Chen', email: 'alice@demo.inked.example', passwordHash: memberHash, role: 'MEMBER', status: 'ACTIVE', department: 'Engineering', designation: 'Senior Engineer' } }),
+    prisma.user.create({ data: { companyId: company.id, fullName: 'Bob Martinez', email: 'bob@demo.inked.example', passwordHash: memberHash, role: 'MEMBER', status: 'ACTIVE', department: 'Design', designation: 'UI/UX Designer' } }),
+    prisma.user.create({ data: { companyId: company.id, fullName: 'Carol Smith', email: 'carol@demo.inked.example', passwordHash: memberHash, role: 'MEMBER', status: 'ACTIVE', department: 'Engineering', designation: 'Backend Engineer' } }),
+    prisma.user.create({ data: { companyId: company.id, fullName: 'David Kim', email: 'david@demo.inked.example', passwordHash: memberHash, role: 'MEMBER', status: 'ACTIVE', department: 'QA', designation: 'QA Engineer' } }),
   ]);
 
   // ── Projects ──────────────────────────────────────────────────────

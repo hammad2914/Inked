@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import {
-  User, Building2, Bell, Shield, Palette, Trash2,
-  Loader2, Sun, Moon, Monitor, AlertTriangle, Check,
+  User, Building2, Bell, Shield, Trash2,
+  Loader2, AlertTriangle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Separator } from '@/components/ui/separator';
 import { api } from '@/api/axios';
 import { useAuthStore } from '@/stores/authStore';
-import { useUIStore } from '@/stores/uiStore';
 import { useToast } from '@/hooks/useToast';
 import { cn } from '@/utils/cn';
 
@@ -22,7 +21,6 @@ const SECTIONS = [
   { key: 'company',      label: 'Company',      icon: Building2 },
   { key: 'notifications',label: 'Notifications', icon: Bell },
   { key: 'security',     label: 'Security',     icon: Shield },
-  { key: 'appearance',   label: 'Appearance',   icon: Palette },
   { key: 'danger',       label: 'Danger Zone',  icon: Trash2 },
 ];
 
@@ -39,14 +37,13 @@ export function SettingsPage() {
 
   const { user, company, logout, updateCompany } = useAuthStore();
   const isAdmin = user?.role === 'COMPANY_ADMIN' || user?.role === 'SUPER_ADMIN';
-  const { theme, setTheme } = useUIStore();
   const { toast } = useToast();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const profileMutation = useMutation({
     mutationFn: () => api.patch(`/users/${user?.id}`, { fullName: profileForm.fullName || user?.fullName, email: profileForm.email || user?.email }),
-    onSuccess: () => toast({ title: '✅ Profile updated' }),
+    onSuccess: () => toast({ title: 'Profile updated' }),
     onError: () => toast({ variant: 'destructive', title: 'Update failed' }),
   });
 
@@ -58,7 +55,7 @@ export function SettingsPage() {
     onSuccess: (res) => {
       updateCompany({ name: res.data.data.company.name });
       setCompanyForm({ name: '' });
-      toast({ title: '✅ Company name updated' });
+      toast({ title: 'Company name updated' });
     },
     onError: (err: unknown) => {
       const e = err as { response?: { data?: { message?: string } } };
@@ -69,7 +66,7 @@ export function SettingsPage() {
   const passwordMutation = useMutation({
     mutationFn: () => api.post('/auth/change-password', passwordForm),
     onSuccess: () => {
-      toast({ title: '✅ Password changed' });
+      toast({ title: 'Password changed' });
       setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
     },
     onError: (err: unknown) => {
@@ -81,7 +78,7 @@ export function SettingsPage() {
   return (
     <div className="p-6">
       <div className="mb-6 animate-fade-up">
-        <h1 className="font-heading font-bold text-2xl text-white">Settings</h1>
+        <h1 className="print-head text-[44px]">Settings</h1>
         <p className="text-sm text-white/35 mt-1">Manage your account, company, and preferences</p>
       </div>
 
@@ -228,7 +225,7 @@ export function SettingsPage() {
                 ))}
               </div>
               <Button
-                onClick={() => toast({ title: '✅ Notification preferences saved' })}
+                onClick={() => toast({ title: 'Notification preferences saved' })}
                 className="bg-gradient-primary text-white rounded-xl shimmer shadow-glow-sm"
               >
                 Save Preferences
@@ -269,40 +266,6 @@ export function SettingsPage() {
             </div>
           )}
 
-          {/* Appearance */}
-          {activeSection === 'appearance' && (
-            <div className="glass rounded-2xl p-6 space-y-5 animate-scale-in">
-              <h2 className="font-heading font-bold text-lg text-white">Appearance</h2>
-              <Separator className="bg-white/[0.07]" />
-              <p className="text-sm text-white/40">Choose your preferred color theme</p>
-              <div className="grid grid-cols-3 gap-3 max-w-sm">
-                {[
-                  { value: 'dark',  label: 'Dark',   icon: Moon,    preview: '#080C14' },
-                  { value: 'light', label: 'Light',  icon: Sun,     preview: '#F8FAFC' },
-                ].map(({ value, label, icon: Icon, preview }) => (
-                  <button
-                    key={value}
-                    onClick={() => setTheme(value as 'dark' | 'light')}
-                    className={cn(
-                      'relative rounded-xl p-4 border transition-all flex flex-col items-center gap-2',
-                      theme === value
-                        ? 'border-indigo bg-indigo/15 shadow-glow-sm'
-                        : 'border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06]',
-                    )}
-                  >
-                    <div className="h-10 w-10 rounded-lg border border-white/[0.1]" style={{ background: preview }} />
-                    <Icon className={cn('h-4 w-4', theme === value ? 'text-indigo' : 'text-white/40')} />
-                    <span className={cn('text-xs font-semibold', theme === value ? 'text-indigo' : 'text-white/45')}>{label}</span>
-                    {theme === value && (
-                      <div className="absolute top-2 right-2 h-4 w-4 rounded-full bg-indigo flex items-center justify-center">
-                        <Check className="h-2.5 w-2.5 text-white" />
-                      </div>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Danger Zone */}
           {activeSection === 'danger' && (

@@ -1,0 +1,87 @@
+.wall {
+  min-height: 100vh; background: var(--wall); color: var(--print); font-size: 16px; line-height: 1.5;
+  background-image: radial-gradient(rgba(0,0,0,.035) 1px, transparent 1.2px); background-size: 5px 5px;
+}
+.wall-wrap { max-width: 1240px; margin: 0 auto; padding: 0 clamp(14px, 3vw, 36px); }
+
+.wall-top { display: flex; align-items: center; gap: 26px; height: 74px; font-size: 14px; }
+.wall-word { font: 700 25px 'Barlow Condensed', sans-serif; letter-spacing: .03em; margin-right: auto; display: flex; align-items: center; gap: 9px; }
+.wall-word i { width: 14px; height: 14px; background: var(--pen); border-radius: 50%; display: inline-block; }
+.wall-top .links { display: flex; gap: 24px; color: var(--soft); }
+.wall-top .links a:hover, .wall-top > a:hover { color: var(--print); }
+@media (max-width: 760px) { .wall-top .links { display: none; } .wall-top { gap: 16px; } }
+
+.wall-sheet {
+  background: var(--sheet); position: relative; margin-top: 6px; transform: rotate(-.3deg);
+  padding: 40px clamp(16px, 2.6vw, 34px) 26px;
+  box-shadow: 0 1px 0 rgba(0,0,0,.06), 0 34px 50px -26px rgba(50,40,20,.5);
+}
+.wall-holes { position: absolute; top: 13px; left: 34px; right: 34px; display: flex; justify-content: space-between; }
+.wall-holes i { width: 12px; height: 12px; border-radius: 50%; background: var(--wall); box-shadow: inset 0 1px 2px rgba(0,0,0,.3); }
+.wall-shead { display: flex; justify-content: space-between; align-items: end; gap: 20px; border-bottom: 3px solid var(--print); padding-bottom: 8px; }
+.wall-shead h1 { font: 700 clamp(40px, 6vw, 86px)/.86 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.wall-shead .meta { text-align: right; font: 500 16px 'Barlow Condensed', sans-serif; letter-spacing: .07em; text-transform: uppercase; color: var(--soft); }
+.wall-tabs { display: flex; gap: 4px; margin: 12px 0 8px; font: 600 15px 'Barlow Condensed', sans-serif; letter-spacing: .06em; text-transform: uppercase; flex-wrap: wrap; }
+.wall-tabs button { padding: 6px 12px; border: 1.5px solid var(--rule); color: var(--soft); border-radius: 3px; }
+.wall-tabs button.on { background: var(--print); border-color: var(--print); color: #fff; }
+.wall .planner .ask { display: none; }
+@media (max-width: 640px) { .wall .planner .ask { display: inline; } }
+
+.wall-under { display: flex; justify-content: space-between; align-items: end; gap: 30px; flex-wrap: wrap; margin-top: 38px; }
+.wall-under p { font-size: clamp(24px, 2.7vw, 36px); line-height: 1.16; letter-spacing: -.02em; max-width: 22em; font-weight: 500; }
+.wall-under p em { font-style: normal; color: var(--soft); }
+.wall-acts { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+.wall-acts .l { font-weight: 600; border-bottom: 1.5px solid currentColor; padding-bottom: 1px; }
+.wall-err { width: 100%; font-size: 14px; color: var(--late); }
+
+.wall-zone { padding-top: clamp(90px, 14vh, 140px); }
+.wall-zone h2 { font: 700 clamp(38px, 5vw, 68px)/.92 'Barlow Condensed', sans-serif; text-transform: uppercase; margin-top: 16px; max-width: 14em; }
+.wall-label { transform: rotate(-1deg); }
+.wall-tape { position: absolute; width: 92px; height: 26px; background: rgba(235,226,196,.82); top: -12px; left: 50%; margin-left: -46px; transform: rotate(-3deg); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+
+.wall-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(18px, 3vw, 40px); margin-top: 46px; align-items: start; }
+@media (max-width: 900px) { .wall-cards { grid-template-columns: minmax(0, 1fr); } }
+.wall-card {
+  background: #FFFDF6; position: relative; padding: 26px 24px 22px;
+  box-shadow: 0 18px 30px -20px rgba(50,40,20,.5), 0 1px 0 rgba(0,0,0,.05);
+  background-image: linear-gradient(transparent 44px, #E9B9B0 44px, #E9B9B0 45.5px, transparent 45.5px), repeating-linear-gradient(transparent 0 27px, #D4E0EE 27px 28px);
+  background-position: 0 0, 0 46px;
+}
+.wall-card:nth-child(1) { transform: rotate(-1.2deg); }
+.wall-card:nth-child(2) { transform: rotate(.8deg); margin-top: 18px; }
+.wall-card:nth-child(3) { transform: rotate(-.5deg); }
+.wall-card .k { font: 600 15px 'Barlow Condensed', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); height: 28px; }
+.wall-card h3 { font: 600 21px/28px 'Inter Tight', sans-serif; letter-spacing: -.01em; margin-top: 6px; }
+.wall-card p { font-size: 15px; line-height: 28px; color: var(--soft); }
+.wall-card .mark { height: 74px; position: relative; margin-top: 8px; }
+.wall-card .mark svg { width: 100%; height: 100%; overflow: visible; }
+.wall-card .mark .h { position: absolute; right: 4px; font: 600 22px 'Caveat', cursive; }
+
+.wall-memo-row { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(30px, 6vw, 90px); margin-top: 46px; align-items: start; }
+@media (max-width: 900px) { .wall-memo-row { grid-template-columns: minmax(0, 1fr); } }
+.wall-memo-row .say p { font-size: 19px; color: var(--soft); margin-bottom: 16px; max-width: 27em; }
+.wall-memo-row .say b { color: var(--print); }
+.wall-memo { background: #fff; position: relative; padding: 38px clamp(22px, 3vw, 40px) 30px; font: 14px/1.75 'IBM Plex Mono', monospace; transform: rotate(.6deg); box-shadow: 0 26px 40px -24px rgba(50,40,20,.55), 0 1px 0 rgba(0,0,0,.05); }
+.wall-memo .clip { position: absolute; top: -22px; left: 40px; width: 22px; height: 62px; border: 3px solid #9A9A9A; border-radius: 12px; border-bottom-color: transparent; }
+.wall-memo .hd { display: grid; grid-template-columns: 70px minmax(0, 1fr); row-gap: 2px; padding-bottom: 14px; border-bottom: 1px dashed #BDB8AD; font-size: 13px; }
+.wall-memo .hd span { color: #8A857B; }
+.wall-memo h3 { font: 600 15px 'IBM Plex Mono', monospace; margin: 18px 0 8px; text-transform: uppercase; letter-spacing: .02em; }
+.wall-memo table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 13px; }
+.wall-memo td { padding: 5px 0; border-bottom: 1px dotted #CFCABD; vertical-align: top; }
+.wall-memo td:last-child { text-align: right; padding-left: 12px; }
+.wall-memo .late { color: var(--late); }
+.wall-memo .scrib { margin: 18px 0 0 auto; transform: rotate(-3deg); font: 600 24px/1 'Caveat', cursive; color: var(--pen); width: max-content; max-width: 100%; }
+.wall-memo .score { position: absolute; right: 28px; top: 30px; width: 68px; height: 68px; border: 2.5px solid var(--late); border-radius: 50%; display: grid; place-items: center; font: 600 28px/1 'Caveat', cursive; color: var(--late); transform: rotate(8deg); background: #fff; }
+@media (max-width: 640px) { .wall-memo .score { width: 54px; height: 54px; font-size: 22px; top: -20px; right: 12px; } }
+
+.wall-spec { background: var(--sheet); margin-top: 46px; position: relative; padding: 34px clamp(18px, 3vw, 40px); box-shadow: 0 26px 40px -26px rgba(50,40,20,.5); transform: rotate(-.2deg); }
+.wall-spec .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(24px, 3.5vw, 48px); }
+@media (max-width: 900px) { .wall-spec .cols { grid-template-columns: minmax(0, 1fr); } }
+.wall-spec .it { padding: 16px 0; border-top: 1px solid var(--rule); }
+.wall-spec .it b { display: block; font: 600 19px 'Barlow Condensed', sans-serif; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px; }
+.wall-spec .it p { font-size: 14.5px; color: var(--soft); }
+.wall-spec code { font: 12.5px 'IBM Plex Mono', monospace; background: #EFECE4; padding: 1px 5px; border-radius: 2px; }
+
+.wall-end { display: flex; justify-content: space-between; align-items: end; gap: 30px; flex-wrap: wrap; padding: clamp(90px, 14vh, 140px) 0 30px; }
+.wall-end h2 { font: 700 clamp(38px, 5vw, 68px)/.92 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.wall-foot { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding: 20px 0 40px; border-top: 1px solid rgba(0,0,0,.15); font-size: 13px; color: var(--soft); }

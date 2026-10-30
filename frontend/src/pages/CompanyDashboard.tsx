@@ -1,14 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
-import {
-  PieChart, Pie, Cell, Tooltip as ReTooltip, ResponsiveContainer,
-  AreaChart, Area, XAxis, YAxis, CartesianGrid,
-} from 'recharts';
-import { Users, FolderKanban, CheckCircle2, AlertTriangle, TrendingUp, Activity } from 'lucide-react';
+import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Planner, PlannerLegend } from '@/components/planner/Planner';
+import { planWindow, taskRow, taskState } from '@/components/planner/plan';
 import { api } from '@/api/axios';
-import { format, subDays } from 'date-fns';
-import { cn } from '@/utils/cn';
-import type { ApiResponse } from '@/types';
+import { format } from 'date-fns';
+import type { ApiResponse, Project, Task } from '@/types';
 
 interface DashboardStats {
   totalEmployees: number;
@@ -16,267 +14,119 @@ interface DashboardStats {
   completedTasks: number;
   overdueTasks: number;
   tasksByStatus: { status: string; count: number }[];
-  recentActivity: { id: string; action: string; entity: string; user: { fullName: string; avatarUrl?: string }; project?: { name: string }; createdAt: string }[];
-  productivityTrend: { date: string; count: number }[];
+  recentActivity: { id: string; action: string; entity: string; user: { fullName: string }; project?: { name: string }; createdAt: string }[];
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  COMPLETED: '#10B981',
-  IN_PROGRESS: '#6366F1',
-  PENDING: '#F59E0B',
-  OVERDUE: '#EF4444',
-  ACCEPTED: '#06B6D4',
+const VERB: Record<string, string> = {
+  CREATE: 'added a',
+  UPDATE: 'changed a',
+  STATUS_CHANGE: 'moved a',
+  ACCEPT_TIMELINE: 'agreed to the dates on a',
+  ACCEPT: 'accepted a',
+  INVITE: 'sent a',
+  ARCHIVE: 'archived a',
+  REMOVE_MEMBER: 'removed a',
 };
-
-const kpiConfig = [
-  { key: 'totalEmployees',  label: 'Team Members',      icon: Users,         color: '#6366F1', bg: 'rgba(99,102,241,0.15)' },
-  { key: 'activeProjects',  label: 'Active Projects',   icon: FolderKanban,  color: '#06B6D4', bg: 'rgba(6,182,212,0.15)'  },
-  { key: 'completedTasks',  label: 'Tasks Completed',   icon: CheckCircle2,  color: '#10B981', bg: 'rgba(16,185,129,0.15)' },
-  { key: 'overdueTasks',    label: 'Overdue Tasks',     icon: AlertTriangle, color: '#EF4444', bg: 'rgba(239,68,68,0.15)'  },
-];
-
-function KpiCard({ label, value, icon: Icon, color, bg, delay }: { label: string; value: number | undefined; icon: React.ElementType; color: string; bg: string; delay: number }) {
-  return (
-    <div
-      className="glass rounded-2xl p-5 card-hover animate-fade-up"
-      style={{ animationDelay: `${delay}ms`, borderColor: `${color}20` }}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-white/35 mb-2">{label}</p>
-          <p className="font-heading font-bold text-3xl text-white">{(value ?? 0).toLocaleString()}</p>
-        </div>
-        <div className="h-11 w-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: bg }}>
-          <Icon className="h-5 w-5" style={{ color }} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DonutTooltip({ active, payload }: { active?: boolean; payload?: { name: string; value: number; payload?: { fill?: string } }[] }) {
-  if (!active || !payload?.length) return null;
-  const entry = payload[0];
-  const color = entry.payload?.fill ?? '#6366F1';
-  return (
-    <div className="rounded-xl px-3.5 py-2.5 shadow-modal bg-card border" style={{ borderColor: `${color}55` }}>
-      <div className="flex items-center gap-2 mb-1.5">
-        <div className="h-2 w-2 rounded-full shrink-0" style={{ background: color, boxShadow: `0 0 6px ${color}` }} />
-        <span className="text-[11px] uppercase tracking-wider text-foreground/50">{entry.name}</span>
-      </div>
-      <span className="font-heading font-bold text-lg text-foreground">{entry.value}</span>
-      <span className="text-[11px] text-foreground/40 ml-1">tasks</span>
-    </div>
-  );
-}
-
-function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: { value: number }[]; label?: string }) {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="rounded-xl px-3.5 py-2.5 shadow-modal border border-indigo/30 bg-card">
-      <p className="text-[11px] text-foreground/45 mb-1">{label}</p>
-      <span className="text-lg font-heading font-bold text-foreground">{payload[0].value}</span>
-      <span className="text-[11px] text-foreground/40 ml-1">completed</span>
-    </div>
-  );
-}
-
-function ActionBubble({ action }: { action: string }) {
-  const map: Record<string, { color: string; label: string }> = {
-    CREATE:       { color: 'bg-indigo/20 text-indigo',  label: 'Created'  },
-    UPDATE:       { color: 'bg-cyan/20 text-cyan',      label: 'Updated'  },
-    STATUS_CHANGE:   { color: 'bg-success/20 text-success', label: 'Status ↑'  },
-    ACCEPT_TIMELINE: { color: 'bg-violet/20 text-violet',  label: 'Accepted'  },
-    COMMENT:         { color: 'bg-cyan/20 text-cyan',       label: 'Commented' },
-    ASSIGN:          { color: 'bg-amber-500/20 text-amber-400', label: 'Assigned' },
-    DELETE:       { color: 'bg-danger/20 text-danger',  label: 'Deleted'  },
-  };
-  const cfg = map[action] ?? { color: 'bg-white/10 text-white/50', label: action };
-  return (
-    <span className={cn('inline-flex h-6 items-center rounded-md px-2 text-[10px] font-semibold tracking-wide shrink-0', cfg.color)}>
-      {cfg.label}
-    </span>
-  );
-}
 
 export function CompanyDashboard() {
   const { data: stats, isLoading } = useQuery({
     queryKey: ['dashboard', 'company'],
     queryFn: () => api.get<ApiResponse<DashboardStats>>('/dashboard/company').then((r) => r.data.data),
   });
+  const { data: projects = [] } = useQuery({
+    queryKey: ['projects'],
+    queryFn: () => api.get<ApiResponse<Project[]>>('/projects').then((r) => r.data.data),
+  });
+  const active = projects.filter((p) => p.status === 'ACTIVE');
+  const taskQueries = useQueries({
+    queries: active.map((p) => ({
+      queryKey: ['tasks', p.id],
+      queryFn: () => api.get<ApiResponse<Task[]>>(`/projects/${p.id}/tasks`).then((r) => r.data.data),
+    })),
+  });
 
-  // Build trend data — normalize API's `count` to `completed` for the chart
-  const trendData = (stats?.productivityTrend?.length
-    ? stats.productivityTrend.slice(-14).map((d) => ({ date: format(new Date(d.date), 'MMM d'), completed: d.count }))
-    : Array.from({ length: 14 }, (_, i) => ({
-        date: format(subDays(new Date(), 13 - i), 'MMM d'),
-        completed: 0,
-      })));
+  const allTasks = useMemo(() => taskQueries.flatMap((q) => q.data ?? []), [taskQueries]);
+  const span = useMemo(() => planWindow(allTasks), [allTasks]);
+  const inPencil = allTasks.filter((t) => taskState(t) === 'pencil').length;
 
-  if (isLoading) {
+  if (isLoading || !stats) {
     return (
-      <div className="p-6 space-y-6">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-28 rounded-2xl skeleton" />)}
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-          <Skeleton className="h-64 rounded-2xl skeleton lg:col-span-2" />
-          <Skeleton className="h-64 rounded-2xl skeleton lg:col-span-3" />
-        </div>
+      <div className="space-y-5 p-6">
+        <Skeleton className="skeleton h-40 w-full" />
+        <Skeleton className="skeleton h-96 w-full" />
       </div>
     );
   }
 
-  if (!stats) return null;
-
-  const donutData = stats.tasksByStatus.filter((s) => s.count > 0);
-  const derivedTotal = donutData.reduce((sum, s) => sum + s.count, 0);
-  const completionRate = derivedTotal > 0 ? Math.round(((stats.completedTasks ?? 0) / derivedTotal) * 100) : 0;
+  const tally = [
+    ['Open projects', stats.activeProjects],
+    ['People', stats.totalEmployees],
+    ['In pencil', inPencil],
+    ['Past deadline', stats.overdueTasks],
+    ['Done', stats.completedTasks],
+  ] as const;
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="animate-fade-up">
-        <h1 className="font-heading font-bold text-2xl text-white">Company Dashboard</h1>
-        <p className="text-sm text-white/35 mt-1">
-          {format(new Date(), 'EEEE, MMMM d, yyyy')} — overview of all projects and tasks
-        </p>
-      </div>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger">
-        {kpiConfig.map(({ key, label, icon, color, bg }, i) => (
-          <KpiCard
-            key={key}
-            label={label}
-            value={stats[key as keyof DashboardStats] as number}
-            icon={icon}
-            color={color}
-            bg={bg}
-            delay={i * 80}
-          />
-        ))}
-      </div>
-
-      {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-        {/* Donut — tasks by status */}
-        <div className="glass rounded-2xl p-5 lg:col-span-2 animate-fade-up" style={{ animationDelay: '200ms' }}>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-heading font-semibold text-sm text-white">Tasks by Status</h2>
-            <span className="text-xs text-white/35">{derivedTotal} total</span>
-          </div>
-          <div className="relative">
-            <ResponsiveContainer width="100%" height={180}>
-              <PieChart>
-                <Pie
-                  data={donutData}
-                  dataKey="count"
-                  nameKey="status"
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={52}
-                  outerRadius={78}
-                  paddingAngle={3}
-                  isAnimationActive
-                >
-                  {donutData.map((entry) => (
-                    <Cell key={entry.status} fill={STATUS_COLORS[entry.status] ?? '#6366F1'} />
-                  ))}
-                </Pie>
-                <ReTooltip content={<DonutTooltip />} />
-              </PieChart>
-            </ResponsiveContainer>
-            {/* Center label */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <p className="font-heading font-bold text-2xl text-white">{completionRate}%</p>
-              <p className="text-[10px] text-white/35">complete</p>
+    <div className="space-y-5 p-4 sm:p-6">
+      <div className="sheet px-4 pb-6 pt-6 sm:px-8">
+        <div className="flex flex-wrap items-end justify-between gap-4 border-b-[3px] border-print pb-2">
+          <h1 className="print-head text-[clamp(36px,5vw,64px)]">The whole wall</h1>
+          <p className="font-heading text-[15px] font-medium uppercase tracking-[.07em] text-muted-foreground">{format(new Date(), 'EEEE d MMMM yyyy')}</p>
+        </div>
+        <dl className="mt-1 grid grid-cols-2 sm:grid-cols-5">
+          {tally.map(([label, value]) => (
+            <div key={label} className="border-b border-rule py-3 pr-3 sm:border-b-0 sm:border-r sm:px-4 sm:first:pl-0 sm:last:border-r-0">
+              <dt className="field-label">{label}</dt>
+              <dd className={`print-head text-[44px] ${label === 'Past deadline' && value > 0 ? 'text-danger' : label === 'In pencil' && value > 0 ? 'text-pen' : ''}`}>{value}</dd>
             </div>
-          </div>
-          {/* Legend */}
-          <div className="mt-3 flex flex-wrap gap-2">
-            {donutData.map((s) => (
-              <div key={s.status} className="flex items-center gap-1.5">
-                <div className="h-2 w-2 rounded-full shrink-0" style={{ background: STATUS_COLORS[s.status] ?? '#6366F1' }} />
-                <span className="text-[11px] text-white/50">{s.status} <span className="text-white/70 font-medium">{s.count}</span></span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Area — productivity trend */}
-        <div className="glass rounded-2xl p-5 lg:col-span-3 animate-fade-up" style={{ animationDelay: '260ms' }}>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-heading font-semibold text-sm text-white">Productivity Trend</h2>
-            <div className="flex items-center gap-1.5 text-xs text-success">
-              <TrendingUp className="h-3.5 w-3.5" />
-              <span>Last 14 days</span>
-            </div>
-          </div>
-          <ResponsiveContainer width="100%" height={190}>
-            <AreaChart data={trendData} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
-              <defs>
-                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#6366F1" stopOpacity={0.35} />
-                  <stop offset="100%" stopColor="#6366F1" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="date" tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 10 }} axisLine={false} tickLine={false} interval={3} />
-              <YAxis tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 10 }} axisLine={false} tickLine={false} />
-              <ReTooltip content={<CustomTooltip />} />
-              <Area
-                type="monotone"
-                dataKey="completed"
-                stroke="#6366F1"
-                strokeWidth={2}
-                fill="url(#areaGrad)"
-                isAnimationActive
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+          ))}
+        </dl>
+        {(stats.overdueTasks > 0 || inPencil > 0) && (
+          <p className="hand mt-3 text-[23px] leading-tight text-pen">
+            {[
+              stats.overdueTasks > 0 && `${stats.overdueTasks} ${stats.overdueTasks === 1 ? 'task is' : 'tasks are'} past the deadline`,
+              inPencil > 0 && `${inPencil} still waiting for someone to agree`,
+            ].filter(Boolean).join(', ')}
+          </p>
+        )}
       </div>
 
-      {/* Activity feed */}
-      <div className="glass rounded-2xl p-5 animate-fade-up" style={{ animationDelay: '320ms' }}>
-        <div className="flex items-center gap-2 mb-4">
-          <Activity className="h-4 w-4 text-indigo" />
-          <h2 className="font-heading font-semibold text-sm text-white">Recent Activity</h2>
-        </div>
+      {active.map((p, i) => {
+        const tasks = taskQueries[i]?.data;
+        return (
+          <div key={p.id} className="sheet px-4 pb-5 pt-5 sm:px-8">
+            <div className="mb-3 flex flex-wrap items-end justify-between gap-3 border-b-2 border-print pb-1.5">
+              <h2 className="print-head text-[30px]">{p.name}</h2>
+              <Link to={`/projects/${p.id}`} className="text-sm font-semibold underline underline-offset-2">Open the project</Link>
+            </div>
+            {!tasks ? (
+              <Skeleton className="skeleton h-48 w-full" />
+            ) : tasks.length === 0 ? (
+              <p className="hand py-6 text-[22px] text-graphite">nothing pencilled in yet</p>
+            ) : (
+              <Planner rows={tasks.map((t) => taskRow(t, `/projects/${p.id}/tasks/${t.id}`))} from={span.from} weeks={span.weeks} />
+            )}
+          </div>
+        );
+      })}
+      {active.length > 0 && <div className="px-1"><PlannerLegend /></div>}
 
+      <div className="sheet px-4 py-5 sm:px-8">
+        <h2 className="print-head border-b-2 border-print pb-1.5 text-[30px]">Logbook</h2>
         {stats.recentActivity.length === 0 ? (
-          <p className="text-sm text-white/30 text-center py-8">No recent activity</p>
+          <p className="hand py-6 text-[22px] text-graphite">nothing has happened yet</p>
         ) : (
-          <div className="relative">
-            {/* Connector line */}
-            <div className="absolute left-[19px] top-4 bottom-4 w-px bg-white/[0.06]" />
-            {stats.recentActivity.map((item, i) => (
-              <div
-                key={item.id}
-                className="flex items-start gap-4 py-3 mb-2 hover:bg-white/[0.02] rounded-xl px-2 transition-colors animate-fade-in"
-                style={{ animationDelay: `${i * 40}ms` }}
-              >
-                {/* Icon bubble */}
-                <div className="relative z-10 h-9 w-9 rounded-full bg-surface border border-white/[0.08] flex items-center justify-center shrink-0 text-xs font-bold text-indigo">
-                  {item.user.fullName.charAt(0)}
-                </div>
-                <div className="flex-1 min-w-0 pt-0.5">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-semibold text-white/80">{item.user.fullName}</span>
-                    <ActionBubble action={item.action} />
-                    <span className="text-sm text-white/40">{item.entity.toLowerCase()}</span>
-                    {item.project && (
-                      <span className="text-xs text-indigo/70">in {item.project.name}</span>
-                    )}
-                  </div>
-                  <p className="text-xs text-white/25 mt-0.5">
-                    {format(new Date(item.createdAt), 'MMM d, h:mm a')}
-                  </p>
-                </div>
-              </div>
+          <ul className="divide-y divide-rule">
+            {stats.recentActivity.map((item) => (
+              <li key={item.id} className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:gap-4">
+                <span className="shrink-0 font-mono text-[12px] text-muted-foreground sm:w-32 sm:pt-0.5">{format(new Date(item.createdAt), 'd MMM, HH:mm')}</span>
+                <span className="text-sm">
+                  <b className="font-semibold">{item.user.fullName}</b> {VERB[item.action] ?? item.action.toLowerCase().replace('_', ' ')} {item.entity.toLowerCase()}
+                  {item.project && <span className="text-muted-foreground"> in {item.project.name}</span>}
+                </span>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </div>
     </div>

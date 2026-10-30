@@ -34,13 +34,13 @@ export async function sendInvitationEmail(
   <body style="font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px;">
     <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; padding: 40px;">
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #6366f1; margin: 0;">Taskify</h1>
+        <h1 style="color: #1D3FD8; margin: 0;">Inked</h1>
       </div>
       <h2 style="color: #1f2937;">You've been invited to ${companyName}!</h2>
       <p style="color: #6b7280;">Hi ${fullName},</p>
-      <p style="color: #6b7280;">You have been invited to join <strong>${companyName}</strong> on Taskify. Click the button below to accept your invitation and set up your account.</p>
+      <p style="color: #6b7280;">You have been invited to join <strong>${companyName}</strong> on Inked. Click the button below to accept your invitation and set up your account.</p>
       <div style="text-align: center; margin: 30px 0;">
-        <a href="${inviteUrl}" style="background: #6366f1; color: white; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">Accept Invitation</a>
+        <a href="${inviteUrl}" style="background: #1D3FD8; color: white; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">Accept Invitation</a>
       </div>
       <p style="color: #9ca3af; font-size: 12px;">This invitation expires in 24 hours. If you did not expect this, you can safely ignore this email.</p>
       <p style="color: #9ca3af; font-size: 12px;">Or copy this link: ${inviteUrl}</p>
@@ -48,7 +48,7 @@ export async function sendInvitationEmail(
   </body>
   </html>`;
 
-  await send(to, fullName, `You're invited to join ${companyName} on Taskify`, html);
+  await send(to, fullName, `You're invited to join ${companyName} on Inked`, html);
 }
 
 export async function sendTaskAssignmentEmail(
@@ -66,17 +66,17 @@ export async function sendTaskAssignmentEmail(
   <body style="font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px;">
     <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; padding: 40px;">
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #6366f1; margin: 0;">Taskify</h1>
+        <h1 style="color: #1D3FD8; margin: 0;">Inked</h1>
       </div>
       <h2 style="color: #1f2937;">New Task Assigned</h2>
       <p style="color: #6b7280;">Hi ${fullName},</p>
       <p style="color: #6b7280;">You have been assigned a new task in <strong>${projectName}</strong>.</p>
-      <div style="background: #f9fafb; border-left: 4px solid #6366f1; padding: 16px; margin: 20px 0; border-radius: 4px;">
+      <div style="background: #f9fafb; border-left: 4px solid #1D3FD8; padding: 16px; margin: 20px 0; border-radius: 4px;">
         <p style="margin: 0; font-weight: bold; color: #1f2937;">${taskTitle}</p>
         <p style="margin: 4px 0 0; color: #6b7280; font-size: 14px;">Deadline: ${deadline.toLocaleDateString()}</p>
       </div>
       <div style="text-align: center; margin: 30px 0;">
-        <a href="${taskUrl}" style="background: #6366f1; color: white; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">View Task</a>
+        <a href="${taskUrl}" style="background: #1D3FD8; color: white; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">View Task</a>
       </div>
     </div>
   </body>
@@ -97,18 +97,18 @@ export async function sendAccountActivationEmail(
   <body style="font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px;">
     <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; padding: 40px;">
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #6366f1; margin: 0;">Taskify</h1>
+        <h1 style="color: #1D3FD8; margin: 0;">Inked</h1>
       </div>
       <h2 style="color: #1f2937;">Activate Your Account</h2>
       <p style="color: #6b7280;">Hi ${fullName},</p>
-      <p style="color: #6b7280;">Welcome to Taskify! Please click the button below to activate your account and set your password.</p>
+      <p style="color: #6b7280;">Welcome to Inked! Please click the button below to activate your account and set your password.</p>
       <div style="text-align: center; margin: 30px 0;">
-        <a href="${activationUrl}" style="background: #6366f1; color: white; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">Activate Account</a>
+        <a href="${activationUrl}" style="background: #1D3FD8; color: white; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">Activate Account</a>
       </div>
       <p style="color: #9ca3af; font-size: 12px;">This link expires in 24 hours.</p>
     </div>
   </body>
   </html>`;
 
-  await send(to, fullName, 'Activate your Taskify account', html);
+  await send(to, fullName, 'Activate your Inked account', html);
 }

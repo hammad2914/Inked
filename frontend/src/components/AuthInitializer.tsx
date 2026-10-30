@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useAuthStore } from '@/stores/authStore';
 import type { User, Company } from '@/types';
 
-const API_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000';
+import { API_URL } from '@/api/config';
 
 /**
  * Runs once on app boot.

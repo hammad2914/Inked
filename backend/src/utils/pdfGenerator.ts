@@ -59,7 +59,7 @@ function memberTable(members: MemberPerformance[]): string {
     <tr style="background:${i % 2 === 0 ? 'white' : '#F9FAFB'}">
       <td style="padding:9px 12px;border-bottom:1px solid #F3F4F6">
         <div style="display:flex;align-items:center;gap:8px">
-          <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#6366F1,#8B5CF6);
+          <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#1D3FD8,#1F2227);
                       color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">
             ${initial(m.name)}
           </div>
@@ -68,7 +68,7 @@ function memberTable(members: MemberPerformance[]): string {
       </td>
       <td style="padding:9px 12px;border-bottom:1px solid #F3F4F6;text-align:center;font-family:monospace;font-size:12px;font-weight:600;color:#374151">${m.assigned}</td>
       <td style="padding:9px 12px;border-bottom:1px solid #F3F4F6;text-align:center;font-family:monospace;font-size:12px;font-weight:600;color:#10B981">${m.completed}</td>
-      <td style="padding:9px 12px;border-bottom:1px solid #F3F4F6;text-align:center;font-family:monospace;font-size:12px;font-weight:600;color:#6366F1">${m.inProgress}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid #F3F4F6;text-align:center;font-family:monospace;font-size:12px;font-weight:600;color:#1D3FD8">${m.inProgress}</td>
       <td style="padding:9px 12px;border-bottom:1px solid #F3F4F6;text-align:center;font-family:monospace;font-size:12px;font-weight:600;color:${m.overdue > 0 ? '#EF4444' : '#9CA3AF'}">${m.overdue}</td>
       <td style="padding:9px 12px;border-bottom:1px solid #F3F4F6;min-width:110px">
         <div style="display:flex;align-items:center;gap:8px">
@@ -84,12 +84,12 @@ function memberTable(members: MemberPerformance[]): string {
     <table style="width:100%;border-collapse:collapse;font-size:12px;border-radius:10px;overflow:hidden;border:1px solid #E5E7EB">
       <thead>
         <tr>
-          <th style="background:linear-gradient(90deg,#6366F1,#8B5CF6);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:left">Member</th>
-          <th style="background:linear-gradient(90deg,#6366F1,#8B5CF6);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:center">Assigned</th>
-          <th style="background:linear-gradient(90deg,#6366F1,#8B5CF6);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:center">Completed</th>
-          <th style="background:linear-gradient(90deg,#6366F1,#8B5CF6);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:center">In Progress</th>
-          <th style="background:linear-gradient(90deg,#6366F1,#8B5CF6);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:center">Overdue</th>
-          <th style="background:linear-gradient(90deg,#6366F1,#8B5CF6);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:left">Completion Rate</th>
+          <th style="background:linear-gradient(90deg,#1D3FD8,#1F2227);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:left">Member</th>
+          <th style="background:linear-gradient(90deg,#1D3FD8,#1F2227);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:center">Assigned</th>
+          <th style="background:linear-gradient(90deg,#1D3FD8,#1F2227);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:center">Completed</th>
+          <th style="background:linear-gradient(90deg,#1D3FD8,#1F2227);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:center">In Progress</th>
+          <th style="background:linear-gradient(90deg,#1D3FD8,#1F2227);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:center">Overdue</th>
+          <th style="background:linear-gradient(90deg,#1D3FD8,#1F2227);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:11px 12px;text-align:left">Completion Rate</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
@@ -106,7 +106,7 @@ function projectCards(projects: ProjectSection[]): string {
       <div style="border:1px solid #E5E7EB;border-radius:12px;margin-bottom:14px;overflow:hidden">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
           <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#6366F1,#8B5CF6);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#1D3FD8,#1F2227);display:flex;align-items:center;justify-content:center;flex-shrink:0">
               <span style="color:white;font-size:14px;font-weight:800">${p.projectName.charAt(0)}</span>
             </div>
             <div>
@@ -133,7 +133,7 @@ function projectCards(projects: ProjectSection[]): string {
           ${[
             { label: 'Total', value: p.totalTasks, color: '#374151' },
             { label: 'Done', value: p.completedTasks, color: '#10B981' },
-            { label: 'In Progress', value: p.inProgressTasks, color: '#6366F1' },
+            { label: 'In Progress', value: p.inProgressTasks, color: '#1D3FD8' },
             { label: 'Overdue', value: p.overdueTasks, color: p.overdueTasks > 0 ? '#EF4444' : '#9CA3AF' },
           ].map((s, i) => `
             <div style="padding:10px 14px;text-align:center;${i < 3 ? 'border-right:1px solid #F3F4F6' : ''}">
@@ -156,9 +156,9 @@ function projectCards(projects: ProjectSection[]): string {
 function sectionHeader(title: string, subtitle?: string): string {
   return `
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #E0E7FF">
-      <div style="width:4px;height:18px;background:linear-gradient(#6366F1,#8B5CF6);border-radius:2px;flex-shrink:0"></div>
+      <div style="width:4px;height:18px;background:linear-gradient(#1D3FD8,#1F2227);border-radius:2px;flex-shrink:0"></div>
       <div>
-        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6366F1">${title}</div>
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#1D3FD8">${title}</div>
         ${subtitle ? `<div style="font-size:10px;color:#9CA3AF;margin-top:1px">${subtitle}</div>` : ''}
       </div>
     </div>`;
@@ -166,7 +166,7 @@ function sectionHeader(title: string, subtitle?: string): string {
 
 function pageHeader(title: string, subtitle: string): string {
   return `
-    <div style="background:linear-gradient(90deg,#6366F1,#8B5CF6);padding:20px 36px 16px;display:flex;align-items:center;justify-content:space-between">
+    <div style="background:linear-gradient(90deg,#1D3FD8,#1F2227);padding:20px 36px 16px;display:flex;align-items:center;justify-content:space-between">
       <div style="font-size:15px;font-weight:700;color:white;letter-spacing:0.5px">${title}</div>
       <div style="font-size:10px;color:rgba(255,255,255,0.55);font-family:monospace">${subtitle}</div>
     </div>`;
@@ -176,7 +176,7 @@ function pageFooter(page: number, total: number, title: string): string {
   return `
     <div style="position:absolute;bottom:22px;left:36px;right:36px;display:flex;align-items:center;justify-content:space-between;
                 font-size:10px;color:#D1D5DB;border-top:1px solid #F3F4F6;padding-top:10px">
-      <span style="font-weight:700;color:#6366F1">TASKIFY</span>
+      <span style="font-weight:700;color:#1D3FD8">INKED</span>
       <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:300px;text-align:center">${title}</span>
       <span style="font-family:monospace">Page ${page} / ${total}</span>
     </div>`;
@@ -235,7 +235,7 @@ export function buildReportHtml(rd: ReportData, title: string): string {
   // ── Recommendation items ──
   const recItems = recs.map((rec, i) => `
     <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;background:#F9FAFB;border:1px solid #E5E7EB;margin-bottom:10px">
-      <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#6366F1,#8B5CF6);color:white;
+      <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#1D3FD8,#1F2227);color:white;
                   font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${i + 1}</div>
       <p style="font-size:12px;line-height:1.65;color:#374151;margin:0;flex:1">${rec}</p>
     </div>`).join('');
@@ -265,10 +265,10 @@ export function buildReportHtml(rd: ReportData, title: string): string {
 
   <!-- Logo -->
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:52px">
-    <div style="width:48px;height:48px;background:linear-gradient(135deg,#6366F1,#8B5CF6);border-radius:12px;
+    <div style="width:48px;height:48px;background:linear-gradient(135deg,#1D3FD8,#1F2227);border-radius:12px;
                 display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:white">T</div>
-    <div style="font-size:30px;font-weight:800;background:linear-gradient(135deg,#6366F1,#A78BFA);
-                -webkit-background-clip:text;-webkit-text-fill-color:transparent">TASKIFY</div>
+    <div style="font-size:30px;font-weight:800;background:linear-gradient(135deg,#1D3FD8,#A78BFA);
+                -webkit-background-clip:text;-webkit-text-fill-color:transparent">INKED</div>
   </div>
 
   <!-- Report label -->
@@ -334,7 +334,7 @@ export function buildReportHtml(rd: ReportData, title: string): string {
     <p style="font-size:13px;line-height:1.85;color:#374151;margin-bottom:16px">${rd.summary}</p>
 
     ${rd.velocityInsight ? `
-    <div style="display:flex;align-items:flex-start;gap:10px;background:#EEF2FF;border-left:4px solid #6366F1;
+    <div style="display:flex;align-items:flex-start;gap:10px;background:#EEF2FF;border-left:4px solid #1D3FD8;
                 border-radius:4px;padding:12px 16px;margin-bottom:24px">
       <span style="font-size:14px;flex-shrink:0">⚡</span>
       <p style="font-size:12px;color:#4338CA;font-style:italic;line-height:1.6;margin:0">${rd.velocityInsight}</p>
