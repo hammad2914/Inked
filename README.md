@@ -22,7 +22,7 @@ backend/    Express + Prisma API, Postgres, Socket.io
 
 **Web app:** React 18, TypeScript, Vite, Tailwind, TanStack Query, Zustand, React Hook Form with Zod.
 
-**API:** Express, TypeScript, Prisma with Postgres, JWT access tokens plus an httpOnly refresh cookie, Socket.io for live notifications, Brevo for email, Gemini for reports, PDFKit for report downloads.
+**API:** Express, TypeScript, Prisma with Postgres, JWT access tokens plus an httpOnly refresh cookie, Socket.io for live notifications, Brevo for email, Gemini for reports, Puppeteer for report PDFs.
 
 Other things the API does:
 
@@ -34,7 +34,7 @@ Other things the API does:
 
 ## Running it locally
 
-You need Node 20+ and a Postgres database (a free [Neon](https://neon.tech) database works).
+You need Node 22 (22.12 or newer) and a Postgres database (a free [Neon](https://neon.tech) database works).
 
 **1. API**
 
