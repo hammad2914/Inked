@@ -60,6 +60,7 @@ GEMINI_API_KEY=         # without it, reports use the template
 
 ```bash
 npx prisma migrate deploy
+npx puppeteer browsers install chrome   # for report PDFs
 npm run dev
 ```
 
