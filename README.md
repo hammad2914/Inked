@@ -34,7 +34,7 @@ Other things the API does:
 
 ## Running it locally
 
-You need Node 22 (22.12 or newer) and a Postgres database (a free [Neon](https://neon.tech) database works).
+You need Node 24 and a Postgres database (a free [Neon](https://neon.tech) database works).
 
 **1. API**
 
