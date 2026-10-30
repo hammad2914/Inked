@@ -3,4 +3,4 @@
 // is what lets the HttpOnly refresh cookie survive a page reload.
 export const API_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 
-export const SOURCE_URL = 'https://github.com/hammad2914/inked';
+export const SOURCE_URL = 'https://github.com/hammad2914/Inked';
